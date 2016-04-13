@@ -644,8 +644,8 @@
                 h = $lbl.outerHeight();
 
             $lbl.css({
-                left: (event.pageX - w / 2) + 'px',
-                top: (event.pageY - h - 20) + 'px'
+                left: (event.pageX + 15) + 'px',
+                top: (event.pageY) + 'px'
             }).show();
         },
         hasLabel: function() {
@@ -718,7 +718,7 @@
             // hover
             _this.$element.on('mouseenter', '[' + ITEM_DAY + ']', function(e) {
                 var arr = _this.getDisDateValue(),
-                    day = new Date(arr[0], arr[1] - 1, parseInt(this.innerHTML));
+                    day = new Date(arr[0], arr[1] - 1, parseInt(this.innerHTML.replace('<i class="dot"></i>', '')));
 
                 if (_this.hasLabel && $(this).data(MARK_DATA)) {
                     $('body').append(_this.$label);
