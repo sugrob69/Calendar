@@ -347,7 +347,7 @@
 
             if (markData) {
                 $item.data(MARK_DATA, markData);
-                $item.html(MARK_DAY_HTML + d);
+                $item.html(MARK_DAY_HTML + '<span class="eventday">'+ d + "</span>");
             }
 
             return $item;
@@ -718,7 +718,7 @@
             // hover
             _this.$element.on('mouseenter', '[' + ITEM_DAY + ']', function(e) {
                 var arr = _this.getDisDateValue(),
-                    day = new Date(arr[0], arr[1] - 1, parseInt(this.innerHTML.replace('<i class="dot"></i>', '')));
+                    day = new Date(arr[0], arr[1] - 1, parseInt(this.innerHTML.replace('<i class="dot"></i>', '').replace('<span class="eventday">', '').replace('</span>', '')));
 
                 if (_this.hasLabel && $(this).data(MARK_DATA)) {
                     $('body').append(_this.$label);
