@@ -60,8 +60,11 @@
 .calendar-views {
     width: 100%;
 }
+.calendar-display {
+	display: inline-block;
+	position: relative;
+}
 .calendar .view,
-.calendar-display,
 .calendar-arrow .prev,
 .calendar .date-items li {
     float: left;
@@ -74,9 +77,11 @@
     height: 280px;
 }
 .calendar-hd {
+	position: relative;
     padding: 10px 0;
     height: 30px;
     line-height: 30px;
+	text-align: center;
 }
 .calendar-display {
     font-size: 28px;
@@ -95,6 +100,9 @@
 .calendar li.old[disabled],
 .calendar li.new[disabled] {
     color: #eee;
+}
+.calendar-display .m {
+	display: none;
 }
 .calendar-display .m,
 .calendar-views .week,
@@ -117,8 +125,11 @@
 }
 
 .calendar-arrow {
-    width: 50px;
-    margin-right: 10px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
 }
 .calendar-arrow span {
     font: 500 26px sans-serif;

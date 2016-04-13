@@ -18,71 +18,72 @@
 
     var defaults = {
 
-            // 宽度
+            // ширина
             width: 280,
-            // 高度, 不包含头部，头部固定高度
+            // высота, заголовок задается отдельно
             height: 280,
 
             zIndex: 1,
 
             // selector or element
-            // 设置触发显示的元素，为null时默认显示
+            // установка элемента триггера
             trigger: null,
 
-            // 偏移位置，可设正负值
-            // trigger 设置时生效
+            // положительный или отрицательный отступ
+            // trigger при установки вступит в силу
             offset: [0, 1],
 
-            // 自定义类，用于重写样式
+            // пользовательский класс
             customClass: '',
 
-            // 显示视图
-            // 可选：date, month
+            // вид отображения
+            // на выбор：date, month
             view: 'date',
 
-            // 默认日期为当前日期
+            // дата по умолчанию равна текущей
             date: new Date(),
             format: 'yyyy/mm/dd',
 
-            // 一周的第一天
-            // 0表示周日，依次类推
+            // первый день недели
+            // 0 означает воскресенье, и так далее
             startWeek: 0,
 
-            // 星期格式
-            weekArray: ['日', '一', '二', '三', '四', '五', '六'],
+            // дни недели
+            weekArray: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
 
-            // 设置选择范围
-            // 格式：[开始日期, 结束日期]
-            // 开始日期为空，则无上限；结束日期为空，则无下限
-            // 如设置2015年11月23日以前不可选：[new Date(), null] or ['2015/11/23']
+            // месяцы
+            monthArray: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+
+            // Настройка диапазона
+            // Формат: [дата начала, дата окончания]
             selectedRang: null,
 
-            // 日期关联数据 [{ date: string, value: object }, ... ]
-            // 日期格式与 format 一致
-            // 如 [ {date: '2015/11/23', value: '面试'} ]
+            // Связанные данные [{ date: string, value: object }, ... ]
+            // формат даты соответствует формату выше
+            // пример [ {date: '2015/11/23', value: 'Событие 1'} ]
             data: null,
 
-            // 展示关联数据
-            // 格式化参数：{m}视图，{d}日期，{v}value
-            // 设置 false 表示不显示
+            // Подсказка для связанных данных
+            // Формат：{m}вид，{d}date，{v}value
+            // если false - не будет отображаться
             label: '{d}\n{v}',
 
-            // 切换字符
+            // Переключатели
             prev: '&lt;',
             next: '&gt;',
 
-            // 切换视图
-            // 参数：view, y, m
+            // Переключение просмотра
+            // Параметры：view, y, m
             viewChange: $.noop,
 
-            // view: 视图
-            // date: 不同视图返回不同的值
-            // value: 日期关联数据
+            // view
+            // date
+            // value
             onSelected: function(view, date, value) {
                 // body...
             },
 
-            // 参数同上
+            // те же параметры
             onMouseenter: $.noop,
 
             onClose: $.noop
@@ -114,25 +115,25 @@
         TODAY_CLASS = 'now',
         SELECT_CLASS = 'selected',
         MARK_DAY_HTML = '<i class="dot"></i>',
-        DATE_DIS_TPL = '{year}/<span class="m">{month}</span>',
+        DATE_DIS_TPL = '<span class="wmonth">{wMonth}</span>&nbsp;{year}&nbsp;<span class="m">{month}</span>',
 
         ITEM_STYLE = 'style="width:{w}px;height:{h}px;line-height:{h}px"',
         WEEK_ITEM_TPL = '<li ' + ITEM_STYLE + '>{wk}</li>',
         DAY_ITEM_TPL = '<li ' + ITEM_STYLE + ' class="{class}" {action}>{value}</li>',
-        MONTH_ITEM_TPL = '<li ' + ITEM_STYLE + ' ' + ITEM_MONTH + '>{m}月</li>',
+        MONTH_ITEM_TPL = '<li ' + ITEM_STYLE + ' ' + ITEM_MONTH + '>{m}</li>',
 
         TEMPLATE = [
             '<div class="calendar-inner">',
             '<div class="calendar-views">',
             '<div class="view view-date">',
             '<div class="calendar-hd">',
-            '<a href="javascript:;" data-calendar-display-date class="calendar-display">',
-            '{yyyy}/<span class="m">{mm}</span>',
-            '</a>',
             '<div class="calendar-arrow">',
-            '<span class="prev" title="上一月" data-calendar-arrow-date>{prev}</span>',
-            '<span class="next" title="下一月" data-calendar-arrow-date>{next}</span>',
+            '<span class="prev" title="Предыдуший месяц" data-calendar-arrow-date>{prev}</span>',
+            '<span class="next" title="Следующий месяц" data-calendar-arrow-date>{next}</span>',
             '</div>',
+            '<a href="javascript:;" data-calendar-display-date class="calendar-display">',
+            '{yyyy}/<span class="m">{mm}</span><span>{mmmm}</span>',
+            '</a>',
             '</div>',
             '<div class="calendar-ct">',
             '<ol class="week">{week}</ol>',
@@ -143,8 +144,8 @@
             '<div class="calendar-hd">',
             '<a href="javascript:;" data-calendar-display-month class="calendar-display">{yyyy}</a>',
             '<div class="calendar-arrow">',
-            '<span class="prev" title="上一年" data-calendar-arrow-month>{prev}</span>',
-            '<span class="next" title="下一年" data-calendar-arrow-month>{next}</span>',
+            '<span class="prev" title="Прошлый год" data-calendar-arrow-month>{prev}</span>',
+            '<span class="next" title="Следующий год" data-calendar-arrow-month>{next}</span>',
             '</div>',
             '</div>',
             '<ol class="calendar-ct month-items">{month}</ol>',
@@ -177,7 +178,7 @@
             var prop = str.replace(/\{|\}/g, '');
             return data[prop] || '';
         });
-    }
+    };
 
     String.prototype.toDate = function() {
         var dt = new Date(),
@@ -188,7 +189,7 @@
         dt.setMonth(arr[1] - 1);
         dt.setDate(arr[2]);
         return dt;
-    }
+    };
 
     Date.prototype.format = function(exp) {
         var y = this.getFullYear(),
@@ -196,7 +197,7 @@
             d = this.getDate();
 
         return exp.replace('yyyy', y).replace('mm', m).replace('dd', d);
-    }
+    };
 
     Date.prototype.isSame = function(y, m, d) {
         if (isDate(y)) {
@@ -206,15 +207,15 @@
             d = dt.getDate();
         }
         return this.getFullYear() === y && this.getMonth() + 1 === m && this.getDate() === d;
-    }
+    };
 
     Date.prototype.add = function(n) {
         this.setDate(this.getDate() + n);
-    }
+    };
 
     Date.prototype.minus = function(n) {
         this.setDate(this.getDate() - n);
-    }
+    };
 
     Date.prototype.clearTime = function(n) {
         this.setHours(0);
@@ -222,11 +223,11 @@
         this.setMinutes(0);
         this.setMilliseconds(0);
         return this;
-    }
+    };
 
     Date.isLeap = function(y) {
         return (y % 100 !== 0 && y % 4 === 0) || (y % 400 === 0);
-    }
+    };
 
     Date.getDaysNum = function(y, m) {
         var num = 31;
@@ -243,7 +244,7 @@
                 break;
         }
         return num;
-    }
+    };
 
     Date.getSiblingsMonth = function(y, m, n) {
         var d = new Date(y, m - 1);
@@ -252,22 +253,22 @@
             y: d.getFullYear(),
             m: d.getMonth() + 1
         };
-    }
+    };
 
     Date.getPrevMonth = function(y, m, n) {
         return this.getSiblingsMonth(y, m, 0 - (n || 1));
-    }
+    };
 
     Date.getNextMonth = function(y, m, n) {
         return this.getSiblingsMonth(y, m, n || 1);
-    }
+    };
 
     Date.tryParse = function(obj) {
         if (!obj) {
             return obj;
         }
         return isDate(obj) ? obj : obj.toDate();
-    }
+    };
 
 
     // Calendar class
@@ -455,7 +456,8 @@
         updateDisDate: function(y, m) {
             this.$disDate.html(DATE_DIS_TPL.repeat({
                 year: y,
-                month: m
+                month: m,
+                wMonth: this.options.monthArray[m - 1]
             }));
         },
         updateDisMonth: function(y) {
@@ -596,9 +598,9 @@
             this.setView('month');
         },
         getDisDateValue: function() {
-            var arr = this.$disDate.html().split('/'),
-                y = Number(arr[0]),
-                m = Number(arr[1].match(/\d{1,2}/)[0]);
+            var arr = this.$disDate.html().split('&nbsp;'),
+                y = Number(arr[1]),
+                m = Number(arr[2].match(/\d{1,2}/)[0]);
 
             return [y, m];
         },
@@ -783,7 +785,7 @@
         }
 
         return this;
-    }
+    };
 
     $.fn.calendar.defaults = defaults;
 
