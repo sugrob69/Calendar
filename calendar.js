@@ -152,7 +152,7 @@
             '</div>',
             '</div>',
             '</div>',
-            '<div class="calendar-label"><p>HelloWorld</p><i></i></div>'
+            '<div class="calendar-label"><p></p><i></i></div>'
         ],
         OS = Object.prototype.toString;
 
@@ -347,7 +347,7 @@
 
             if (markData) {
                 $item.data(MARK_DATA, markData);
-                $item.html(d + MARK_DAY_HTML);
+                $item.html(MARK_DAY_HTML + d);
             }
 
             return $item;
